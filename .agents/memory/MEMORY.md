@@ -1,0 +1,1 @@
+- [Expo patch firewall](expo-patch-firewall.md) — newly released SDK patch updates can be temporarily blocked by the workspace package firewall.

@@ -1,0 +1,29 @@
+name: BrillPrime Mobile CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - run: pnpm --filter @workspace/brillprime-mobile run lint
+      - run: pnpm --filter @workspace/brillprime-mobile run typecheck
+      - run: pnpm --filter @workspace/brillprime-mobile run format:check
+      - run: pnpm --filter @workspace/brillprime-mobile run eas:validate
+      - run: pnpm --filter @workspace/brillprime-mobile run expo:check

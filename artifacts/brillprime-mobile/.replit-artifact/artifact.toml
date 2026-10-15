@@ -1,0 +1,24 @@
+kind = "mobile"
+previewPath = "/"
+title = "BrillPrime"
+description = "A mobile ecommerce marketplace for consumers and merchants, built for iOS and Android."
+version = "1.0.0"
+id = "artifacts/brillprime-mobile"
+router = "expo-domain"
+
+[[services]]
+name = "expo"
+ensurePreviewReachable = "/status"
+paths = [ "/" ]
+localPort = 25478
+
+[services.development]
+run = "pnpm --filter @workspace/brillprime-mobile run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/brillprime-mobile", "run", "build" ]
+run = [ "pnpm", "--filter", "@workspace/brillprime-mobile", "run", "serve" ]
+
+[services.env]
+PORT = "25478"
+BASE_PATH = "/"
