@@ -25,12 +25,12 @@ Copy the matching `.env.*.example` file to `.env.local` for local development,
 then fill in the public client configuration for your Firebase and Supabase
 projects. `.env.local` is ignored by Git.
 
-For remote profiles, create `development`, `preview`, and `production`
-environment variable sets in the build environment and use the same variable
-names listed in the example files. Never put a Firebase service-account key or
-Supabase service-role key in the mobile app. The client uses only Firebase
-client configuration and the Supabase anonymous key, protected by backend
-authorization policies.
+The local workflow sets `EXPO_PUBLIC_APP_ENV=development`. EAS profiles set the
+same value for their matching `development`, `preview`, or `production`
+environment. Configure the Firebase and Supabase client values separately for
+each environment. `EXPO_PUBLIC_*` values are embedded in the app bundle; never
+put a Firebase service-account key or Supabase service-role key in the mobile
+app. Use the Supabase anonymous key with server-side authorization policies.
 
 The scaffold includes a React error boundary with a recoverable fallback and
 logs unhandled UI exceptions to the app console. Remote crash-report ingestion
@@ -41,18 +41,34 @@ is not connected yet.
 - **iOS and Android:** start the `artifacts/brillprime-mobile: expo` workflow,
   then use Replit's phone preview/QR flow with Expo Go. The current screen is
   only the scaffold confirmation screen.
-- **Web:** the source is web-compatible, and `pnpm run expo:check` exports the
-  iOS, Android, and web bundles for a compile check. The Expo artifact preview
-  is configured for mobile.
+- **Web:** run `pnpm --filter @workspace/brillprime-mobile run web:export` to
+  export the static web build to `dist/`. `pnpm run expo:check` exports the iOS,
+  Android, and web bundles for a compile check.
 - **Checks:** from the workspace root, run
   `pnpm --filter @workspace/brillprime-mobile run typecheck`,
   `pnpm --filter @workspace/brillprime-mobile run lint`,
   `pnpm --filter @workspace/brillprime-mobile run format:check`, and
-  `pnpm --filter @workspace/brillprime-mobile run expo:check`.
+  `pnpm --filter @workspace/brillprime-mobile run eas:validate`.
 
 The development EAS profile builds a custom development client; Expo Go remains
 available for checking the current scaffold. Features that use native-only
 modules will need a custom development build.
+
+## Release profiles
+
+| Profile       | Distribution                | Android artifact         | App environment |
+| ------------- | --------------------------- | ------------------------ | --------------- |
+| `development` | Internal development client | APK                      | `development`   |
+| `preview`     | Internal tester build       | APK                      | `preview`       |
+| `production`  | Store release               | Android App Bundle (AAB) | `production`    |
+
+All three profiles use the fixed iOS bundle identifier and Android application
+ID `com.brillprime.app`, and automatically increment native build numbers. That
+means installing a build from another profile replaces the same app on a
+device. iOS internal and production distribution still require Apple signing
+and App Store Connect setup. The production Android profile is configured to
+produce an AAB; Google Play submission is not supported by Replit's current
+mobile publishing flow.
 
 ## CI and native builds
 

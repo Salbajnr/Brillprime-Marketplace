@@ -22,7 +22,13 @@
       }
     },
     "web": {
-      "favicon": "./assets/images/icon.png"
+      "bundler": "metro",
+      "output": "static",
+      "favicon": "./assets/images/icon.png",
+      "name": "BrillPrime",
+      "shortName": "BrillPrime",
+      "themeColor": "#073B32",
+      "backgroundColor": "#F6F8F6"
     },
     "plugins": [
       "expo-router",
